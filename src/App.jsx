@@ -1,111 +1,254 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import logo from './assets/logo.png';
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   HomeOutlined,
   UsergroupAddOutlined,
   PieChartOutlined,
   UserOutlined,
   DownOutlined
 } from '@ant-design/icons';
-import { Button, ConfigProvider, Flex, Layout, Menu, theme, Avatar, Dropdown, Space, Badge } from 'antd';
+import { RiMenu5Line } from '@remixicon/react';
+import { Button, ConfigProvider, Layout, Menu, theme, Avatar, Dropdown, Space, Badge, Drawer } from 'antd';
+
 const { Header, Sider, Content } = Layout;
 
 const App = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);       // Desktop collapse
+  const [mobileVisible, setMobileVisible] = useState(false); // Mobile Drawer
   const [dropDown, setDropDown] = useState(false);
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const items = [{
-    label: (<a>hi</a>)
-  }]
+  const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
+
+  const items = [{ label: <a>hi</a> }];
 
   const menuItems = [
-    {
-      key: '1',
-      icon: <HomeOutlined />,
-      label: 'nav 1',
-    },
-    {
-      key: '2',
-      icon: <UsergroupAddOutlined />,
-      label: 'nav 2',
+ {
+  key: '1',
+  icon: <HomeOutlined style={{ fontSize: 18 }} />,
+  label: 'الرئيسية',
+  style: {
+    borderBottom: '1px solid lightgrey',
+    fontSize: 12,
+    paddingTop: 8,   // increase top padding
+    paddingBottom: 8 // increase bottom padding
+  }
+}
+,
+    { 
+      key: '2', 
+      icon: <UsergroupAddOutlined style={{fontSize: 18}} />, 
+      label: 'وحدة بيانات المستخدمين',
+      style: { borderBottom: '1px solid lightgrey' , fontSize: 12,paddingTop: 2, paddingBottom: 2 },
       children: [
-        { key: "4", label: "nav2 -> 1" },
-        { key: "5", label: "nav2 -> 2" },
-        { key: "6", label: "nav2 -> 3" },
+        { 
+          key: "4", 
+          label: "nav2 -> 1",
+        },
+        { 
+          key: "5", 
+          label: "nav2 -> 2",
+        },
+        { 
+          key: "6", 
+          label: "nav2 -> 3",
+        },
       ]
     },
-    {
-      key: '3',
-      icon: <PieChartOutlined />,
-      label: 'nav 3',
+    { 
+      key: '3', 
+      icon: <PieChartOutlined style={{fontSize: 18}} />, 
+      label: 'وحدة التقارير و الإحصائيات',
+            style: { borderBottom: '1px solid lightgrey' , fontSize: 12 },
+
       children: [
-        { key: "7", label: "nav3 -> 1" },
-        { key: "8", label: "nav3 -> 2" },
-        { key: "9", label: "nav3 -> 3" },
+        { 
+          key: "7", 
+          label: "nav3 -> 1",
+        },
+        { 
+          key: "8", 
+          label: "nav3 -> 2",
+        },
+        { 
+          key: "9", 
+          label: "nav3 -> 3",
+        },
       ]
     },
-  ]
+  ];
+
+  // Track window size for responsiveness
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth <= 768;
 
   return (
     <ConfigProvider direction='rtl'>
       <Layout style={{ minHeight: "100vh" }}>
-        <Sider style={{ marginTop: "64px", boxShadow: "5px 5px 5px rgba(0, 0, 0, 0.3)" }} theme='light' trigger={null} collapsible collapsed={collapsed} reverseArrow={true} width={250}>
-          <div className="demo-logo-vertical" />
-          <Menu
-            theme="light"
-            mode="inline"
-            multiple={false}
-            defaultSelectedKeys={["1"]}
-            items={menuItems}
-          />
-        </Sider>
-        <Header style={{ padding: 0, background: colorBgContainer, position: "fixed", width: "100%", zIndex: 1000, boxShadow: "1px 1px 20px rgba(0, 0, 0, 0.3)" }}>
-          <Flex justify='space-between' style={{ marginInline: "30px" }}>
-            <div>
-              <Button
-                type="text"
-                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                onClick={() => setCollapsed(!collapsed)}
-                style={{
-                  fontSize: '16px',
-                  width: 64,
-                  height: 64,
-                }}
-              />
-              <img alt='logo' />
+        {/* Desktop Sider - Fixed on the right side for RTL */}
+        {!isMobile && (
+          <Sider
+            style={{
+              position: 'fixed',
+              height: '100vh',
+              right: 0, // Changed from left to right for RTL
+              top: 0,
+              bottom: 0,
+              boxShadow: "5px 5px 5px rgba(0, 0, 0, 0.3)",
+            }}
+            theme='light'
+            trigger={null}
+            collapsible
+            collapsed={collapsed}
+            reverseArrow={true}
+            width={250}
+          >
+            <div style={{ 
+              height: '64px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              padding: '0 16px',
+              borderBottom: '1px solid #f0f0f0' // Add border to logo area
+            }}>
+              <img src={logo} width='40' alt='logo' />
             </div>
-            <div>
-              <Badge dot offset={[5, 48]} color='red'>
-                <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-              </Badge>
-              <Dropdown menu={{ items }} trigger={['click']} onOpenChange={(open) => setDropDown(open)}>
-                <a onClick={e => e.preventDefault()} style={{ color: "black" }}>
-                  <Space style={{ marginInline: "10px" }}>
-                    Super Admin
-                    <DownOutlined style={{ fontSize: 10, transition: "all 0.3 ease" }} rotate={dropDown ? 180 : 0} />
-                  </Space>
-                </a>
-              </Dropdown>
+            <Menu
+              theme="light"
+              mode="inline"
+              multiple={false}
+              defaultSelectedKeys={["1"]}
+              items={menuItems}
+              style={{ borderRight: 0 }} // Remove default menu border
+            />
+          </Sider>
+        )}
+
+        {/* Mobile Drawer */}
+        {isMobile && (
+          <Drawer
+            placement="right"
+            onClose={() => setMobileVisible(false)}
+            open={mobileVisible}
+            bodyStyle={{ padding: 0 }}
+            width={250}
+            headerStyle={{ display: 'none' }}
+            maskClosable={true}
+            style={{ top: 64, zIndex: 100 }} // Lower z-index than header
+          >
+            <div style={{ 
+              height: '64px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              padding: '0 16px',
+              borderBottom: '1px solid #f0f0f0' // Add border to logo area
+            }}>
+              <img src={logo} width='40' alt='logo' />
             </div>
-          </Flex>
-        </Header>
-        <Content
-          style={{
-            margin: '80px 16px 16px 16px',
-            padding: 24,
-            minHeight: 280,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          Content
-        </Content>
+            <Menu
+              theme="light"
+              mode="inline"
+              multiple={false}
+              defaultSelectedKeys={["1"]}
+              items={menuItems.map(item => ({
+                ...item,
+                style: { ...item.style, borderBottom: '1px solid #f0f0f0' }
+              }))}
+              onClick={() => setMobileVisible(false)}
+              style={{ borderRight: 0 }} // Remove default menu border
+            />
+          </Drawer>
+        )}
+
+        {/* Main Layout - Adjusted margin for RTL sidebar */}
+        <Layout style={{ 
+          marginRight: !isMobile && !collapsed ? '250px' : !isMobile && collapsed ? '80px' : '0', 
+          transition: 'margin-right 0.2s',
+          marginLeft: '0 !important' 
+        }}>
+          <Header
+            style={{
+              padding: '0 16px',
+              background: colorBgContainer,
+              position: "fixed",
+              width: "100%",
+              zIndex: 1000, // Higher than drawer
+              boxShadow: "1px 1px 20px rgba(0, 0, 0, 0.3)",
+              right: 0, // Changed from left to right for RTL
+            }}
+          >
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <Button
+                  type="text"
+                  onClick={() => isMobile ? setMobileVisible(true) : setCollapsed(!collapsed)}
+                  style={{
+                    fontSize: '22px',
+                    width: 44,
+                    height: 44,
+                    padding: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                  icon={<RiMenu5Line />}
+                />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {/* Logo is always visible in navbar */}
+                  <img src={logo} width={isMobile ? '40' : '70'} alt='logo' style={{ display: 'block' }} />
+                  {!isMobile && (
+                    <span style={{ fontSize: '16px', fontWeight: '600', color: '#000' }}>
+                      القيادة العامة لشرطة الفجيرة
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: isMobile ? '8px' : 0 }}>
+                <Badge dot offset={[5, 48]} color='red'>
+                  <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+                </Badge>
+                {!isMobile && (
+                  <Dropdown menu={{ items }} trigger={['click']} onOpenChange={(open) => setDropDown(open)}>
+                    <a onClick={e => e.preventDefault()} style={{ color: "black" }}>
+                      <Space style={{ marginInline: "10px" }}>
+                        Super Admin
+                        <DownOutlined style={{ fontSize: 10, transition: "all 0.3s ease" }} rotate={dropDown ? 180 : 0} />
+                      </Space>
+                    </a>
+                  </Dropdown>
+                )}
+              </div>
+            </div>
+          </Header>
+
+          <Content
+            style={{
+              margin: isMobile ? '100px 8px 16px 8px' : '80px 16px 16px 16px',
+              padding: 24,
+              minHeight: 280,
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+            }}
+          >
+            Content
+          </Content>
+        </Layout>
       </Layout>
     </ConfigProvider>
   );
 };
+
 export default App;
