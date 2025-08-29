@@ -7,8 +7,8 @@ import {
   UserOutlined,
   DownOutlined
 } from '@ant-design/icons';
-import { RiMenu5Line } from '@remixicon/react';
-import { Button, ConfigProvider, Layout, Menu, theme, Avatar, Dropdown, Space, Badge, Drawer } from 'antd';
+import { RiMenu5Line, RiLogoutBoxRLine, RiArrowDownSLine, RiCloseLargeLine } from '@remixicon/react';
+import { Button, ConfigProvider, Layout, Menu, theme, Avatar, Dropdown, Space, Badge, Drawer, Flex, Grid } from 'antd';
 
 const { Header, Sider, Content } = Layout;
 
@@ -20,58 +20,58 @@ const App = () => {
 
   const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
 
-  const items = [{ label: <a>hi</a> }];
+  const items = [{ label: <a style={{ color: "#7A180E" }}>تسجيل الخروج</a>, icon: <RiLogoutBoxRLine color='#7A180E' /> }];
 
   const menuItems = [
- {
-  key: '1',
-  icon: <HomeOutlined style={{ fontSize: 18 }} />,
-  label: 'الرئيسية',
-  style: {
-    borderBottom: '1px solid lightgrey',
-    fontSize: 12,
-    paddingTop: 8,   // increase top padding
-    paddingBottom: 8 // increase bottom padding
-  }
-}
-,
-    { 
-      key: '2', 
-      icon: <UsergroupAddOutlined style={{fontSize: 18}} />, 
+    {
+      key: '1',
+      icon: <HomeOutlined style={{ fontSize: 18 }} />,
+      label: 'الرئيسية',
+      style: {
+        borderBottom: '1px solid lightgrey',
+        fontSize: 12,
+        paddingTop: 8,   // increase top padding
+        paddingBottom: 8 // increase bottom padding
+      }
+    }
+    ,
+    {
+      key: '2',
+      icon: <UsergroupAddOutlined style={{ fontSize: 18 }} />,
       label: 'وحدة بيانات المستخدمين',
-      style: { borderBottom: '1px solid lightgrey' , fontSize: 12,paddingTop: 2, paddingBottom: 2 },
+      style: { borderBottom: '1px solid lightgrey', fontSize: 12, paddingTop: 2, paddingBottom: 2 },
       children: [
-        { 
-          key: "4", 
+        {
+          key: "4",
           label: "nav2 -> 1",
         },
-        { 
-          key: "5", 
+        {
+          key: "5",
           label: "nav2 -> 2",
         },
-        { 
-          key: "6", 
+        {
+          key: "6",
           label: "nav2 -> 3",
         },
       ]
     },
-    { 
-      key: '3', 
-      icon: <PieChartOutlined style={{fontSize: 18}} />, 
+    {
+      key: '3',
+      icon: <PieChartOutlined style={{ fontSize: 18 }} />,
       label: 'وحدة التقارير و الإحصائيات',
-            style: { borderBottom: '1px solid lightgrey' , fontSize: 12 },
+      style: { borderBottom: '1px solid lightgrey', fontSize: 12 },
 
       children: [
-        { 
-          key: "7", 
+        {
+          key: "7",
           label: "nav3 -> 1",
         },
-        { 
-          key: "8", 
+        {
+          key: "8",
           label: "nav3 -> 2",
         },
-        { 
-          key: "9", 
+        {
+          key: "9",
           label: "nav3 -> 3",
         },
       ]
@@ -93,6 +93,7 @@ const App = () => {
         {/* Desktop Sider - Fixed on the right side for RTL */}
         {!isMobile && (
           <Sider
+
             style={{
               position: 'fixed',
               height: '100vh',
@@ -108,10 +109,10 @@ const App = () => {
             reverseArrow={true}
             width={250}
           >
-            <div style={{ 
-              height: '64px', 
-              display: 'flex', 
-              alignItems: 'center', 
+            <div style={{
+              height: '64px',
+              display: 'flex',
+              alignItems: 'center',
               padding: '0 16px',
               borderBottom: '1px solid #f0f0f0' // Add border to logo area
             }}>
@@ -131,24 +132,21 @@ const App = () => {
         {/* Mobile Drawer */}
         {isMobile && (
           <Drawer
+            closable
+            closeIcon={<RiCloseLargeLine color='black' />}
             placement="right"
             onClose={() => setMobileVisible(false)}
             open={mobileVisible}
+            destroyOnHidden
             bodyStyle={{ padding: 0 }}
+            headerStyle={{ display: "none" }}
+            maskClosable
+            mask={false}
             width={250}
-            headerStyle={{ display: 'none' }}
-            maskClosable={true}
-            style={{ top: 64, zIndex: 100 }} // Lower z-index than header
+            styles={{ display: "none" }}
+            zIndex={1}
+            style={{ marginTop: "65px" }}
           >
-            <div style={{ 
-              height: '64px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              padding: '0 16px',
-              borderBottom: '1px solid #f0f0f0' // Add border to logo area
-            }}>
-              <img src={logo} width='40' alt='logo' />
-            </div>
             <Menu
               theme="light"
               mode="inline"
@@ -165,10 +163,10 @@ const App = () => {
         )}
 
         {/* Main Layout - Adjusted margin for RTL sidebar */}
-        <Layout style={{ 
-          marginRight: !isMobile && !collapsed ? '250px' : !isMobile && collapsed ? '80px' : '0', 
+        <Layout style={{
+          marginRight: !isMobile && !collapsed ? '250px' : !isMobile && collapsed ? '80px' : '0',
           transition: 'margin-right 0.2s',
-          marginLeft: '0 !important' 
+          marginLeft: '0 !important'
         }}>
           <Header
             style={{
@@ -181,16 +179,11 @@ const App = () => {
               right: 0, // Changed from left to right for RTL
             }}
           >
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap'
-            }}>
+            <Flex align='center' justify='space-between'>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Button
                   type="text"
-                  onClick={() => isMobile ? setMobileVisible(true) : setCollapsed(!collapsed)}
+                  onClick={() => isMobile ? setMobileVisible(!mobileVisible) : setCollapsed(!collapsed)}
                   style={{
                     fontSize: '22px',
                     width: 44,
@@ -207,7 +200,7 @@ const App = () => {
                 />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   {/* Logo is always visible in navbar */}
-                  <img src={logo} width={isMobile ? '40' : '70'} alt='logo' style={{ display: 'block' }} />
+                  <img src={logo} width={isMobile ? '70' : '80'} alt='logo' style={{ display: 'block' }} />
                   {!isMobile && (
                     <span style={{ fontSize: '16px', fontWeight: '600', color: '#000' }}>
                       القيادة العامة لشرطة الفجيرة
@@ -216,22 +209,24 @@ const App = () => {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: isMobile ? '8px' : 0 }}>
-                <Badge dot offset={[5, 48]} color='red'>
-                  <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+              <Flex align='center' gap="12px" style={{ marginBottom: "10px" }}>
+                <Badge dot offset={[7, 47]} color='red'>
+                  <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} size={40} />
                 </Badge>
                 {!isMobile && (
                   <Dropdown menu={{ items }} trigger={['click']} onOpenChange={(open) => setDropDown(open)}>
                     <a onClick={e => e.preventDefault()} style={{ color: "black" }}>
-                      <Space style={{ marginInline: "10px" }}>
-                        Super Admin
-                        <DownOutlined style={{ fontSize: 10, transition: "all 0.3s ease" }} rotate={dropDown ? 180 : 0} />
+                      <Space style={{ marginInline: "10px", display: "flex", alignItems: "center" }}>
+                        <Flex align='center' gap="small">
+                          Super Admin
+                          <RiArrowDownSLine style={{ transform: dropDown ? "rotate(180deg)" : "rotate(0deg)", transition: "all 0.3s ease" }} size={15} color='#7A180E' />
+                        </Flex>
                       </Space>
                     </a>
                   </Dropdown>
                 )}
-              </div>
-            </div>
+              </Flex>
+            </Flex>
           </Header>
 
           <Content
@@ -247,7 +242,7 @@ const App = () => {
           </Content>
         </Layout>
       </Layout>
-    </ConfigProvider>
+    </ConfigProvider >
   );
 };
 
