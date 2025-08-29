@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Children } from 'react';
 import logo from './assets/logo.png';
 import {
   HomeOutlined,
@@ -27,19 +27,17 @@ const App = () => {
       key: '1',
       icon: <HomeOutlined style={{ fontSize: 18 }} />,
       label: 'الرئيسية',
-      style: {
-        borderBottom: '1px solid lightgrey',
-        fontSize: 12,
-        paddingTop: 8,   // increase top padding
-        paddingBottom: 8 // increase bottom padding
-      }
+      inlineCollapsed: false,
+      expandIcon: () => { null },
+      children: []
+      // style: { border: "1px solid lightgrey", padding: "18px 20px 18px 15px" }
     }
     ,
     {
       key: '2',
       icon: <UsergroupAddOutlined style={{ fontSize: 18 }} />,
       label: 'وحدة بيانات المستخدمين',
-      style: { borderBottom: '1px solid lightgrey', fontSize: 12, paddingTop: 2, paddingBottom: 2 },
+      style: { borderTop: "1px solid lightgrey", borderBottom: "1px solid lightgrey", borderRadius: 0 },
       children: [
         {
           key: "4",
@@ -59,8 +57,7 @@ const App = () => {
       key: '3',
       icon: <PieChartOutlined style={{ fontSize: 18 }} />,
       label: 'وحدة التقارير و الإحصائيات',
-      style: { borderBottom: '1px solid lightgrey', fontSize: 12 },
-
+      style: { borderTop: "1px solid lightgrey", borderBottom: "1px solid lightgrey", borderRadius: 0 },
       children: [
         {
           key: "7",
@@ -95,7 +92,7 @@ const App = () => {
           <Sider
 
             style={{
-              position: 'fixed',
+              position: 'absolute',
               height: '100vh',
               right: 0, // Changed from left to right for RTL
               top: 0,
@@ -110,7 +107,7 @@ const App = () => {
             width={250}
           >
             <div style={{
-              height: '64px',
+              height: '65px',
               display: 'flex',
               alignItems: 'center',
               padding: '0 16px',
